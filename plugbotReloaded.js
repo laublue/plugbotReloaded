@@ -69,6 +69,9 @@ var COOKIE_USERLIST = 'userlist';
 */
 var MAX_USERS_WAITLIST = 50;
 
+
+var version = "0.3.5";
+
 /*
 * Color codes for the buttons in the UI.
 */
