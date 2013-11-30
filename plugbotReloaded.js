@@ -142,7 +142,6 @@ function displayUI()
   /*
 * Generate the HTML code for the UI.
 */
-  $('#chat').prepend('<div id="plugbot-ui"></div>');
 
   /*
 * Determine the color of the menu item based on its state, on or off.
@@ -156,7 +155,7 @@ function displayUI()
 * Draw the UI.
 */
   $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="color:' + cWoot + 
-  '; background-color:' + cWoot + '; left:213px;"></div>');
+  '; background-color:' + cWoot + '; left:213px;"><span>W</span></div>');
 }
 
 
