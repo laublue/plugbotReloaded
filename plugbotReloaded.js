@@ -156,6 +156,8 @@ function displayUI()
 */
   $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="background-color:' + cWoot + 
   '; left:213px; color:'+ !cWoot + ';"><span style="font-size:21px; color:' + !cWoot + ';">W</span></div>');
+  $('#chat-header').append('<div id="btn-autoqueue" class="chat-header-button" style="background-color:' + cQueue + 
+  '; left:265px; color:'+ !cQueue + ';"><span style="font-size:21px; color:' + !cQueue + ';">Q</span></div>');
 }
 
 
@@ -173,25 +175,6 @@ function displayUI()
 function initUIListeners()
 {
   /*
-* Toggle userlist.
-*/
-  $('#plugbot-btn-userlist').on("click", function() {
-    userList = !userList;
-    $(this).css('color', userList ? BUTTON_ON : BUTTON_OFF);
-   
-    $('#plugbot-userlist').css('visibility', userList ? 'visible' : 'hidden');
-
-    if (!userList) {
-      $('#plugbot-userlist').empty();
-    }
-    else {
-      populateUserlist();
-    }
-
-    jaaulde.utils.cookies.set(COOKIE_USERLIST, userList);
-  });
-
-  /*
 * Toggle auto-woot.
 */
   $('#btn-autowoot').on('click', function() {
@@ -201,7 +184,6 @@ function initUIListeners()
     if (autowoot) {
       $('#woot').click();
     }
-    //TODO ADD CHAT MESSAGE HERE
     
     if(autowoot) {
      API.chatLog("Autowoot is now : ON");
@@ -213,51 +195,20 @@ function initUIListeners()
   });
 
   /*
-* Toggle hide video.
-*/
-  $('#plugbot-btn-hidevideo').on('click', function() {
-    hideVideo = !hideVideo;
-    $(this).css('color', hideVideo ? BUTTON_ON : BUTTON_OFF);
-   
-    $(this).text(hideVideo ? 'hiding video' : 'hide video');
-    $('#yt-frame').animate({
-      'height': (hideVideo ? '0px' : '271px')
-    }, {
-      duration: 'fast'
-    });
-    $('#playback .frame-background').animate({
-      'opacity': (hideVideo ? '0' : '0.91')
-    }, {
-      duration: 'medium'
-    });
-
-    jaaulde.utils.cookies.set(COOKIE_HIDE_VIDEO, hideVideo);
-  });
-
-  /*
-* Skip the current video.
-*/
-  $('#plugbot-btn-skipvideo').on('click', function() {
-    skippingVideo = !skippingVideo;
-    $(this).css('color', skippingVideo ? BUTTON_ON : BUTTON_OFF);
-    $(this).text(skippingVideo ? 'skipping video' : 'skip video');
-       
-    if (hideVideo == skippingVideo) {
-      $('#button-sound').click();
-    } else {
-      $('#plugbot-btn-hidevideo').click();
-      $('#button-sound').click();
-    }
-  });
-
-  /*
 * Toggle auto-queue/auto-DJ.
 */
-  $('#plugbot-btn-queue').on('click', function() {
+  $('#btn-autoqueue').on('click', function() {
     autoqueue = !autoqueue;
-    $(this).css('color', autoqueue ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('background-color', autoqueue ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('color', !autoqueue ? BUTTON_ON : BUTTON_OFF)
 
     queueUpdate();
+    
+    if (autoqueue) {
+     API.chatLog("AutoQueue is now : ON");
+    } else {
+     API.chatLog("AutoQueue is now : OFF");
+    }
        
     jaaulde.utils.cookies.set(COOKIE_QUEUE, autoqueue);
   });
