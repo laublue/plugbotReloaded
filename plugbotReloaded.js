@@ -155,7 +155,7 @@ function displayUI()
 * Draw the UI.
 */
   $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="color:' + cWoot + 
-  '; background-color:' + cWoot + '; left:213px;"><span>W</span></div>');
+  '; background-color:' + cWoot + '; left:213px;"><span style="magin-top:auto; margin-left:auto; margin-right:auto; margin-botom:auto; color:#FFFFF>W</span></div>');
 }
 
 
@@ -200,6 +200,7 @@ function initUIListeners()
     if (autowoot) {
       $('#woot').click();
     }
+    //TODO ADD CHAT MESSAGE HERE
 
     jaaulde.utils.cookies.set(COOKIE_WOOT, autowoot);
   });
