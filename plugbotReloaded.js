@@ -274,14 +274,13 @@ function initUIListeners()
 * Toggle auto-queue/auto-DJ.
 */
   $('#btn-autoqueue').on('click', function() {
+   alert("LOL");
     autoqueue = !autoqueue;
     $(this).css('background-color', autoqueue ? BUTTON_ON : BUTTON_OFF);
     $(this).css('color', !autoqueue ? BUTTON_ON : BUTTON_OFF);
 
     queueUpdate();
     
-    
-    alert(autoqueue);
     
     if (autoqueue) {
      API.chatLog("AutoQueue is now : ON");
