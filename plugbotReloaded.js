@@ -280,7 +280,7 @@ function initUIListeners()
 
     queueUpdate();
     
-    if(autoqueue) {
+    if(autoqueue==true) {
      API.chatLog("AutoQueue is now : ON");
     } else {
      API.chatLog("AutoQueue is now : OFF");
