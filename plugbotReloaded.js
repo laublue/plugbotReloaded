@@ -135,12 +135,14 @@ function displayUI()
 * Be sure to remove any old instance of the UI, in case the user reloads the script without refreshing the page
 * (updating.)
 */
-  $('#plugbot-ui').remove();
+
+  $('#btn-autowoot').remove();
+  $('#btn-autoqueue').remove();
 
   /*
 * Generate the HTML code for the UI.
 */
-  $('#chat').prepend('<div id="plugbot-ui"></div>');
+
 
   /*
 * Determine the color of the menu item based on its state, on or off.
@@ -153,12 +155,10 @@ function displayUI()
   /*
 * Draw the UI.
 */
-  $('#plugbot-ui').append('<p id="plugbot-btn-woot" style="color:' + cWoot
-    + '">auto-woot</p><p id="plugbot-btn-queue" style="color:' + cQueue
-    + '">auto-queue</p><p id="plugbot-btn-hidevideo" style="color:' + cHideVideo
-    + '">hide video</p><p id="plugbot-btn-skipvideo" style="color:' + BUTTON_OFF + '">skip video</p>'
-    + '<p id="plugbot-btn-userlist" style="color:' + cUserList
-    + '">userlist</p>');
+  $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="background-color:' + cWoot + 
+  '; left:213px; color:'+ !cWoot + ';"><span style="font-size:21px; color:' + !cWoot + ';">W</span></div>');
+  $('#chat-header').append('<div id="btn-autoqueue" class="chat-header-button" style="background-color:' + cQueue + 
+  '; left:265px; color:'+ !cQueue + ';"><span style="font-size:21px; color:' + !cQueue + ';">Q</span></div>');
 }
 
 
@@ -555,7 +555,7 @@ function drawUserlistItem(imagePath, color, username)
 */
 $('#plugbot-userlist').remove();
 $('#plugbot-css').remove();
-$('#plugbot-js').remove();
+$('#plugbotReloaded-js').remove();
 
 
 /*
