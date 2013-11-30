@@ -197,7 +197,12 @@ function initUIListeners()
 */
   $('#btn-autowoot').on('click', function() {
     autowoot = !autowoot;
-    $(this).css('color', autowoot ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('background-color', autowoot ? BUTTON_ON : BUTTON_OFF);
+    if (autowoot) {
+     alert("Autowoot ON");
+    } else {
+     alert("Autowoot OFF");
+    }
 
     if (autowoot) {
       $('#woot').click();
