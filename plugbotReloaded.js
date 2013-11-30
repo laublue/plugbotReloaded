@@ -275,14 +275,12 @@ function initUIListeners()
 */
   $('#btn-autoqueue').on('click', function() {
     autoqueue = !autoqueue;
-    alert(autoqueue);
     $(this).css('background-color', autoqueue ? BUTTON_ON : BUTTON_OFF);
     $(this).css('color', !autoqueue ? BUTTON_ON : BUTTON_OFF);
 
     queueUpdate();
     
-    
-    if (autoqueue) {
+    if(autoqueue) {
      API.chatLog("AutoQueue is now : ON");
     } else {
      API.chatLog("AutoQueue is now : OFF");
