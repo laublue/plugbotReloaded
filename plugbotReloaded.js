@@ -142,7 +142,7 @@ function displayUI()
   /*
 * Generate the HTML code for the UI.
 */
-  $('#chat-header').prepend('<div id="plugbotReloaded-AutoWoot"></div>');
+  $('#chat-header').prepend('<div id="plugbotReloaded-AutoWoot" class="chat-header-button"></div>');
 
   /*
 * Determine the color of the menu item based on its state, on or off.
@@ -155,7 +155,7 @@ function displayUI()
   /*
 * Draw the UI.
 */
-  $('#plugbotReloaded-AutoWoot').append('<img src="" width="24px" height="24px" style="{margin:auto;}"');
+  $('#plugbotReloaded-AutoWoot').append('<div id="autowoot" style="{margin:auto;}"></div>');
 }
 
 
