@@ -155,7 +155,7 @@ function displayUI()
   /*
 * Draw the UI.
 */
-  $('#plugbotReloaded-AutoWoot').append('<div id="autowoot" style="margin:auto; background-color:' + cWoot + '"></div>');
+  $('#plugbotReloaded-AutoWoot').append('<div id="autowoot" style="margin:auto; background-color:' + cWoot + ';"></div>');
 }
 
 
