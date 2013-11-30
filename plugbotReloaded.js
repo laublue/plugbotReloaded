@@ -158,6 +158,7 @@ function displayUI()
 * (updating.)
 */
   $('#btn-autowoot').remove();
+  $('#btn-autoqueue').remove();
 
   /*
 * Generate the HTML code for the UI.
