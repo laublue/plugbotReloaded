@@ -672,4 +672,5 @@ function onCookiesLoaded()
   initAPIListeners();
   displayUI();
   initUIListeners();
+  API.chatLog("Running plugbotReloaded. Type /pbrhelp for details");
 }
