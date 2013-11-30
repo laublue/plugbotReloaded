@@ -197,12 +197,19 @@ function initUIListeners()
   /*
 * Toggle auto-woot.
 */
-  $('#plugbot-btn-woot').on('click', function() {
+  $('#btn-autowoot').on('click', function() {
     autowoot = !autowoot;
-    $(this).css('color', autowoot ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('background-color', autowoot ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('color', !autowoot ? BUTTON_ON : BUTTON_OFF)
 
     if (autowoot) {
-      $('#button-vote-positive').click();
+      $('#woot').click();
+    }
+    
+    if(autowoot) {
+     API.chatLog("Autowoot is now : ON");
+    } else {
+     API.chatLog("Autowoot is now : OFF");
     }
 
     jaaulde.utils.cookies.set(COOKIE_WOOT, autowoot);
