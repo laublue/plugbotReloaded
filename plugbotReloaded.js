@@ -32,9 +32,7 @@
 */
 
 /*
-* CREDITS AND PROPS TO THE ORIGINAL AUTHOR
 * @author Conner Davis (Fugitive. on Plug.dj)
-* @author Murohman (For the Reloaded Version)
 */
  
 /*
@@ -58,8 +56,6 @@ var userList;
 */
 var skippingVideo = false;
 
-var version = "0.5.3";
-
 /*
 * Cookie constants
 */
@@ -77,25 +73,7 @@ var MAX_USERS_WAITLIST = 50;
 * Color codes for the buttons in the UI.
 */
 var BUTTON_ON = '#3fff00';
-var BUTTON_OFF = '#ed1c24
-
-
-function displayWelcomeMessage()
-{
-  API.chatLog("Welcome to PlugBot Reloaded version " + version + " !");
-  API.chatLog("Type /pbrhelp for details.");
-  if (autowoot) {
-   API.chatLog("Autowoot is currently : ON");
-  }else {
-   API.chatLog("Autowoot is currently : OFF");
-  }
-  
-  if (autoqueue) {
-   API.chatLog("AutoQueue is currently : ON");
-  }else {
-   API.chatLog("AutoQueue is currently : OFF");
-  }
-}
+var BUTTON_OFF = '#ed1c24';
 
 
 /**
@@ -157,12 +135,12 @@ function displayUI()
 * Be sure to remove any old instance of the UI, in case the user reloads the script without refreshing the page
 * (updating.)
 */
-  $('#btn-autowoot').remove();
-  $('#btn-autoqueue').remove();
+  $('#plugbot-ui').remove();
 
   /*
 * Generate the HTML code for the UI.
 */
+  $('#chat').prepend('<div id="plugbot-ui"></div>');
 
   /*
 * Determine the color of the menu item based on its state, on or off.
@@ -175,10 +153,12 @@ function displayUI()
   /*
 * Draw the UI.
 */
-  $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="background-color:' + cWoot + 
-  '; left:213px; color:'+ !cWoot + ';"><span style="font-size:21px; color:' + !cWoot + ';">W</span></div>');
-  $('#chat-header').append('<div id="btn-autoqueue" class="chat-header-button" style="background-color:' + cQueue + 
-  '; left:265px; color:'+ !cQueue + ';"><span style="font-size:21px; color:' + !cQueue + ';">Q</span></div>');
+  $('#plugbot-ui').append('<p id="plugbot-btn-woot" style="color:' + cWoot
+    + '">auto-woot</p><p id="plugbot-btn-queue" style="color:' + cQueue
+    + '">auto-queue</p><p id="plugbot-btn-hidevideo" style="color:' + cHideVideo
+    + '">hide video</p><p id="plugbot-btn-skipvideo" style="color:' + BUTTON_OFF + '">skip video</p>'
+    + '<p id="plugbot-btn-userlist" style="color:' + cUserList
+    + '">userlist</p>');
 }
 
 
@@ -195,7 +175,6 @@ function displayUI()
 */
 function initUIListeners()
 {
- 
   /*
 * Toggle userlist.
 */
@@ -214,28 +193,22 @@ function initUIListeners()
 
     jaaulde.utils.cookies.set(COOKIE_USERLIST, userList);
   });
-  
+
   /*
 * Toggle auto-woot.
 */
-  $('#btn-autowoot').on('click', function() {
+  $('#plugbot-btn-woot').on('click', function() {
     autowoot = !autowoot;
-    $(this).css('background-color', autowoot ? BUTTON_ON : BUTTON_OFF);
-    $(this).css('color', !autowoot ? BUTTON_ON : BUTTON_OFF)
+    $(this).css('color', autowoot ? BUTTON_ON : BUTTON_OFF);
+
     if (autowoot) {
-      $('#woot').click();
-    }
-    
-    if(autowoot) {
-     API.chatLog("Autowoot is now : ON");
-    } else {
-     API.chatLog("Autowoot is now : OFF");
+      $('#button-vote-positive').click();
     }
 
     jaaulde.utils.cookies.set(COOKIE_WOOT, autowoot);
   });
-  
-    /*
+
+  /*
 * Toggle hide video.
 */
   $('#plugbot-btn-hidevideo').on('click', function() {
@@ -273,22 +246,14 @@ function initUIListeners()
     }
   });
 
-
   /*
 * Toggle auto-queue/auto-DJ.
 */
-  $('#btn-autoqueue').on('click', function() {
+  $('#plugbot-btn-queue').on('click', function() {
     autoqueue = !autoqueue;
-    $(this).css('background-color', autoqueue ? BUTTON_ON : BUTTON_OFF);
-    $(this).css('color', !autoqueue ? BUTTON_ON : BUTTON_OFF)
+    $(this).css('color', autoqueue ? BUTTON_ON : BUTTON_OFF);
 
     queueUpdate();
-    
-    if (autoqueue) {
-     API.chatLog("AutoQueue is now : ON");
-    } else {
-     API.chatLog("AutoQueue is now : OFF");
-    }
        
     jaaulde.utils.cookies.set(COOKIE_QUEUE, autoqueue);
   });
@@ -323,7 +288,7 @@ function djAdvanced(obj)
 * If auto-woot is enabled, WOOT! the song.
 */
   if (autowoot) {
-    $('#woot').click();
+    $('#button-vote-positive').click();
   }
 
   /*
@@ -590,7 +555,7 @@ function drawUserlistItem(imagePath, color, username)
 */
 $('#plugbot-userlist').remove();
 $('#plugbot-css').remove();
-$('#plugbotReloaded-js').remove();
+$('#plugbot-js').remove();
 
 
 /*
@@ -709,5 +674,5 @@ function onCookiesLoaded()
   initAPIListeners();
   displayUI();
   initUIListeners();
-  displayWelcomeMessage();
 }
+
