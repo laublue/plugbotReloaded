@@ -202,6 +202,12 @@ function initUIListeners()
       $('#woot').click();
     }
     //TODO ADD CHAT MESSAGE HERE
+    
+    if(autowoot) {
+     API.chatLog("Autowoot is now : ON");
+    } else {
+     API.chatLog("Autowoot is now : OFF");
+    }
 
     jaaulde.utils.cookies.set(COOKIE_WOOT, autowoot);
   });
