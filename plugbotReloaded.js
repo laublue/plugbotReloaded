@@ -154,8 +154,7 @@ function displayUI()
   /*
 * Draw the UI.
 */
-  $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="color:' + cWoot + 
-  '; background-color:' + cWoot + '; left:213px;"><span style="magin-top:auto; margin-left:auto; margin-right:auto; margin-botom:auto; color:#FFFFF>W</span></div>');
+  $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="background-color:' + cWoot + '; left:213px;"><span style="magin-top:auto; margin-left:auto; margin-right:auto; margin-botom:auto; color: rgb(238, 238, 238);>W</span></div>');
 }
 
 
