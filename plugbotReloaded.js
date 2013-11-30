@@ -633,7 +633,7 @@ function readCookies()
 * Read Auto-Queue cookie (false by default)
 */
   value = jaaulde.utils.cookies.get(COOKIE_QUEUE);
-  autoqueue = value != null ? value : false;
+  autoqueue = value != null ? value : true;
 
   /*
 * Read hidevideo cookie (false by default)
