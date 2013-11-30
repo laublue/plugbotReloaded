@@ -704,8 +704,8 @@ function onCookiesLoaded()
   initAPIListeners();
   displayUI();
   initUIListeners();
-  //API.chatLog("Welcome to PlugBot Reloaded version " + version + " !");
-  //API.chatLog("Type /pbrhelp for details.");
+  API.chatLog("Welcome to PlugBot Reloaded version " + version + " !");
+  API.chatLog("Type /pbrhelp for details.");
   if (autowoot) {
    API.chatLog("Autowoot is currently : ON");
   }else {
