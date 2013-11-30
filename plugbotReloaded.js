@@ -629,5 +629,20 @@ function onCookiesLoaded()
   initAPIListeners();
   displayUI();
   initUIListeners();
-  API.chatLog("Running plugbotReloaded. Type /pbrhelp for details");
+  string s = "Running PlugBot Reloaded !.\n\rType /pbrhelp for details\n\r";
+  //API.chatLog("Running PlugBot Reloaded !.\n\rType /pbrhelp for details");
+  if (autowoot) {
+   s += "Autowoot is currently : ON\n\r";
+  }else {
+   s += "Autowoot is currently : OFF\n\r";
+  }
+  
+  if (autoqueue) {
+   s += "AutoQueue is currently : ON";
+  }else {
+   s += "AutoQueue is currently : OFF";
+  }
+  
+  API.chatLog(s);
+  
 }
