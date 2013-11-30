@@ -58,6 +58,8 @@ var userList;
 */
 var skippingVideo = false;
 
+var version = "0.5.3";
+
 /*
 * Cookie constants
 */
@@ -75,7 +77,25 @@ var MAX_USERS_WAITLIST = 50;
 * Color codes for the buttons in the UI.
 */
 var BUTTON_ON = '#3fff00';
-var BUTTON_OFF = '#ed1c24';
+var BUTTON_OFF = '#ed1c24
+
+
+function displayWelcomeMessage()
+{
+  API.chatLog("Welcome to PlugBot Reloaded version " + version + " !");
+  API.chatLog("Type /pbrhelp for details.");
+  if (autowoot) {
+   API.chatLog("Autowoot is currently : ON");
+  }else {
+   API.chatLog("Autowoot is currently : OFF");
+  }
+  
+  if (autoqueue) {
+   API.chatLog("AutoQueue is currently : ON");
+  }else {
+   API.chatLog("AutoQueue is currently : OFF");
+  }
+}
 
 
 /**
@@ -629,17 +649,5 @@ function onCookiesLoaded()
   initAPIListeners();
   displayUI();
   initUIListeners();
-  API.chatLog("Running PlugBot Reloaded !");
-  API.chatLog("Type /pbrhelp for details.");
-  if (autowoot) {
-   API.chatLog("Autowoot is currently : ON");
-  }else {
-   API.chatLog("Autowoot is currently : OFF");
-  }
-  
-  if (autoqueue) {
-   API.chatLog("AutoQueue is currently : ON");
-  }else {
-   API.chatLog("AutoQueue is currently : OFF");
-  }
+  displayWelcomeMessage();
 }
