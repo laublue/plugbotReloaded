@@ -161,22 +161,6 @@ function displayUI()
   '; left:265px; color:'+ !cQueue + ';"><span style="font-size:21px; color:' + !cQueue + ';">Q</span></div>');
 }
 
-function displayWelcomeMessage()
-{
-  API.chatLog("Welcome to PlugBot Reloaded version " + version + " !");
-  API.chatLog("Type /pbrhelp for details.");
-  if (autowoot) {
-   API.chatLog("Autowoot is currently : ON");
-  }else {
-   API.chatLog("Autowoot is currently : OFF");
-  }
-  
-  if (autoqueue) {
-   API.chatLog("AutoQueue is currently : ON");
-  }else {
-   API.chatLog("AutoQueue is currently : OFF");
-  }
-}
 
 
 /**
@@ -717,6 +701,18 @@ function onCookiesLoaded()
   initAPIListeners();
   displayUI();
   initUIListeners();
-  displayWelcomeMessage();
+  API.chatLog("Welcome to PlugBot Reloaded version " + version + " !");
+  API.chatLog("Type /pbrhelp for details.");
+  if (autowoot) {
+   API.chatLog("Autowoot is currently : ON");
+  }else {
+   API.chatLog("Autowoot is currently : OFF");
+  }
+  
+  if (autoqueue) {
+   API.chatLog("AutoQueue is currently : ON");
+  }else {
+   API.chatLog("AutoQueue is currently : OFF");
+  }
 }
 
