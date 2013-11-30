@@ -256,11 +256,18 @@ function initUIListeners()
   /*
 * Toggle auto-queue/auto-DJ.
 */
-  $('#plugbot-btn-queue').on('click', function() {
+  $('#btn-autoqueue').on('click', function() {
     autoqueue = !autoqueue;
-    $(this).css('color', autoqueue ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('background-color', autoqueue ? BUTTON_ON : BUTTON_OFF);
+    $(this).css('color', !autoqueue ? BUTTON_ON : BUTTON_OFF);
 
     queueUpdate();
+    
+    if (autoqueue) {
+     API.chatLog("AutoQueue is now : ON");
+    } else {
+     API.chatLog("AutoQueue is now : OFF");
+    }
        
     jaaulde.utils.cookies.set(COOKIE_QUEUE, autoqueue);
   });
