@@ -45,12 +45,26 @@ var autowoot;
 * Whether the user has currently enabled auto-queueing.
 */
 var autoqueue;
+/*
+* Whether or not the user has enabled hiding this video.
+*/
+var hideVideo;
+/*
+* Whether or not the user has enabled the userlist.
+*/
+var userList;
+/*
+* Whether the current video was skipped or not.
+*/
+var skippingVideo = false;
 
 /*
 * Cookie constants
 */
 var COOKIE_WOOT = 'autowoot';
 var COOKIE_QUEUE = 'autoqueue';
+var COOKIE_HIDE_VIDEO = 'hidevideo';
+var COOKIE_USERLIST = 'userlist';
 
 /*
 * Maximum amount of people that can be in the waitlist.
@@ -123,11 +137,12 @@ function displayUI()
 * Be sure to remove any old instance of the UI, in case the user reloads the script without refreshing the page
 * (updating.)
 */
-  $('#plugbot-ui').remove();
+  $('#btn-autowoot').remove();
 
   /*
 * Generate the HTML code for the UI.
 */
+  $('#chat').prepend('<div id="plugbot-ui"></div>');
 
   /*
 * Determine the color of the menu item based on its state, on or off.
@@ -140,7 +155,8 @@ function displayUI()
   /*
 * Draw the UI.
 */
-  $('#chat-header').append('<div id="autowoot" class="chat-header-button" style="color:' + cWoot + '; background-color:' + cWoot + '; left:213px;"></div>');
+  $('#chat-header').append('<div id="btn-autowoot" class="chat-header-button" style="color:' + cWoot + 
+  '; background-color:' + cWoot + '; left:213px;"></div>');
 }
 
 
@@ -157,11 +173,29 @@ function displayUI()
 */
 function initUIListeners()
 {
+  /*
+* Toggle userlist.
+*/
+  $('#plugbot-btn-userlist').on("click", function() {
+    userList = !userList;
+    $(this).css('color', userList ? BUTTON_ON : BUTTON_OFF);
+   
+    $('#plugbot-userlist').css('visibility', userList ? 'visible' : 'hidden');
+
+    if (!userList) {
+      $('#plugbot-userlist').empty();
+    }
+    else {
+      populateUserlist();
+    }
+
+    jaaulde.utils.cookies.set(COOKIE_USERLIST, userList);
+  });
 
   /*
 * Toggle auto-woot.
 */
-  $('#autowoot').on('click', function() {
+  $('#btn-autowoot').on('click', function() {
     autowoot = !autowoot;
     $(this).css('color', autowoot ? BUTTON_ON : BUTTON_OFF);
 
@@ -170,6 +204,44 @@ function initUIListeners()
     }
 
     jaaulde.utils.cookies.set(COOKIE_WOOT, autowoot);
+  });
+
+  /*
+* Toggle hide video.
+*/
+  $('#plugbot-btn-hidevideo').on('click', function() {
+    hideVideo = !hideVideo;
+    $(this).css('color', hideVideo ? BUTTON_ON : BUTTON_OFF);
+   
+    $(this).text(hideVideo ? 'hiding video' : 'hide video');
+    $('#yt-frame').animate({
+      'height': (hideVideo ? '0px' : '271px')
+    }, {
+      duration: 'fast'
+    });
+    $('#playback .frame-background').animate({
+      'opacity': (hideVideo ? '0' : '0.91')
+    }, {
+      duration: 'medium'
+    });
+
+    jaaulde.utils.cookies.set(COOKIE_HIDE_VIDEO, hideVideo);
+  });
+
+  /*
+* Skip the current video.
+*/
+  $('#plugbot-btn-skipvideo').on('click', function() {
+    skippingVideo = !skippingVideo;
+    $(this).css('color', skippingVideo ? BUTTON_ON : BUTTON_OFF);
+    $(this).text(skippingVideo ? 'skipping video' : 'skip video');
+       
+    if (hideVideo == skippingVideo) {
+      $('#button-sound').click();
+    } else {
+      $('#plugbot-btn-hidevideo').click();
+      $('#button-sound').click();
+    }
   });
 
   /*
@@ -194,10 +266,34 @@ function initUIListeners()
 function djAdvanced(obj)
 {
   /*
+* If they want the video to be hidden, be sure to re-hide it.
+*/
+  if (hideVideo) {
+    $('#yt-frame').css('height', '0px');
+    $('#playback .frame-background').css('opacity', '0.0');
+  }
+
+  /*
+* If they want to skip the next video, do it.
+*/
+  if (skippingVideo) {
+    $('#plugbot-btn-skipvideo').css('color', BUTTON_ON).text('skip video');
+    $('#button-sound').click();
+    skippingVideo = false;
+  }
+
+  /*
 * If auto-woot is enabled, WOOT! the song.
 */
   if (autowoot) {
     $('#woot').click();
+  }
+
+  /*
+* If the userlist is enabled, re-populate it.
+*/
+  if (userList) {
+    populateUserlist();
   }
 }
 
@@ -233,18 +329,218 @@ function isInQueue()
 */
 function joinQueue()
 {
- if (API.getWaitList().length < MAX_USERS_WAITLIST) {
-    API.djJoin();
-  }
-}
-
-function oldjoinQueue()
-{
- if ($('#button-dj-play').css('display') === 'block') {
+  if ($('#button-dj-play').css('display') === 'block') {
     $('#button-dj-play').click();
   } else if (API.getWaitList().length < MAX_USERS_WAITLIST) {
     API.djJoin();
   }
+}
+
+
+/**
+* Generates every user in the room and their current vote as color-coded text. Also, moderators get the star next to
+* their name.
+*/
+function populateUserlist()
+{
+  /*
+* Destroy the old userlist DIV and replace it with a fresh empty one to work with.
+*/
+  $('#plugbot-userlist').remove();
+  /*
+* Spawn the new one.
+*/
+  $('body').append('<div id="plugbot-userlist"></div>');
+
+  /*
+* Update the current # of users in the room.
+*/
+  $('#plugbot-userlist').append('<h1 style="text-indent:12px;color:#42A5DC;font-size:14px;font-variant:small-caps;">Users: ' + API.getUsers().length + '</h1>');
+
+  /*
+* You can mention people from the userlist.
+*/
+  $('#plugbot-userlist').append('<p style="padding-left:12px;text-indent:0px !important;font-style:italic;color:#42A5DC;font-size:11px;">Click a username to<br />@mention them</p><br />');
+
+  /*
+* If the user is in the waitlist, show them their current spot.
+*/
+  if ($('#button-dj-waitlist-view').attr('title') !== '') {
+    if ($('#button-dj-waitlist-leave').css('display') === 'block' && ($.inArray(API.getDJs(), API.getUser()) == -1)) {
+      var spot = $('#button-dj-waitlist-view').attr('title').split('(')[1];
+      spot = spot.substring(0, spot.indexOf(')'));
+      $('#plugbot-userlist').append('<h1 id="plugbot-queuespot"><span style="font-variant:small-caps">Waitlist:</span> ' + spot + '</h3><br />');
+    }
+  }
+
+  /*
+* An array of all of the room's users.
+*/
+  var users = new Array();
+
+  /*
+* Populate the users array with the next user in the room (this is stored alphabetically.)
+*/
+  for (user in API.getUsers()) {
+    users.push(API.getUsers()[user]);
+  }
+
+  /*
+* For every user, call the #appendUser(username, vote) method which will display their username with any color
+* coding that they match.
+*/
+  for (user in users) {
+    var user = users[user];
+    appendUser(user);
+  }
+}
+
+/**
+* Appends another user's username to the userlist.
+*
+* @param user The user we're adding to the userlist.
+*/
+function appendUser(user)
+{
+  var username = user.username;
+  /*
+* 1: normal (or 0)
+* 2: bouncer
+* 3: manager
+* 4/5: (co-)host
+*/
+  var permission = user.permission;
+
+  /*
+* If they're an admin, set them as a fake permission, makes it easier.
+*/
+  if (user.admin) {
+    permission = 99;
+  }
+
+  /*
+* For special users, we put a picture of their rank (the star) before their name, and color it based on their
+* vote.
+*/
+  var imagePrefix;
+  switch (permission) {
+    case 0:
+      imagePrefix = 'normal';
+      break;
+    case 1:
+      imagePrefix = 'featured';
+      break;
+    case 2:
+      imagePrefix = 'bouncer';
+      break;
+    case 3:
+      imagePrefix = 'manager';
+      break;
+    case 4:
+    case 5:
+      imagePrefix = 'host';
+      break;
+    case 99:
+      imagePrefix = 'admin';
+      break;
+    }
+
+  /*
+* If they're the current DJ, override their rank and show a different color, a shade of blue, to denote that
+* they're playing right now (since they can't vote their own song.)
+*/
+  if (API.getDJs()[0].username == username) {
+    if (imagePrefix === 'normal') {
+      drawUserlistItem('void', '#42A5DC', username);
+    } else {
+      drawUserlistItem(imagePrefix + '_current.png', '#42A5DC', username);
+    }
+  } else if (imagePrefix === 'normal') {
+    /*
+* If they're a normal user, they have no special icon.
+*/
+    drawUserlistItem('void', colorByVote(user.vote), username);
+  } else {
+    /*
+* Otherwise, they're ranked and they aren't playing,
+* so draw the image next to them.
+*/
+    drawUserlistItem(imagePrefix + imagePrefixByVote(user.vote), colorByVote(user.vote), username);
+  }
+}
+
+
+/**
+* Determine the color of a person's username in the userlist based on their current vote.
+*
+* @param vote Their vote: woot, undecided or meh.
+*/
+function colorByVote(vote)
+{
+  if (!vote) {
+    return '#fff'; // blame Boycey
+  }
+    
+  switch (vote) {
+    case -1: // Meh
+      return '#c8303d';
+    case 0: // Undecided
+      return '#fff';
+    case 1: // Woot
+      return '#c2e320';
+  }
+}
+
+
+/**
+* Determine the "image prefix", or a picture that shows up next to each user applicable in the userlist. This denotes
+* their rank, and its color is changed based on that user's vote.
+*
+* @param vote Their current vote.
+* @return The varying path to the PNG image for this user, as a string. NOTE: this only provides the suffix
+* of the path.. the prefix of the path, which is admin_, host_, etc. is done elsewhere.
+*/
+function imagePrefixByVote(vote)
+{
+  if (!vote) {
+    return '_undecided.png'; // blame boycey again
+  }
+
+  switch (vote) {
+    case -1:
+      return '_meh.png';
+    case 0:
+      return '_undecided.png';
+    case 1:
+      return '_woot.png';
+  }
+}
+
+
+/**
+* Draw a user in the userlist.
+*
+* @param imagePath An image prefixed by their username denoting rank; bouncer/manager/etc. 'void' for normal users.
+* @param color Their color in the userlist, based on vote.
+* @param username Their username.
+*/
+function drawUserlistItem(imagePath, color, username)
+{
+  /*
+* If they aren't a normal user, draw their rank icon.
+*/
+  if (imagePath !== 'void') {
+    $('#plugbot-userlist').append('<img src="https://raw.github.com/connergdavis/Plugbot/master/icons/'
+      + imagePath + '" align="left" style="margin-left:6px;margin-top:2px" />');
+  }
+
+  /*
+* Write the HTML code to the userlist.
+*/
+  $('#plugbot-userlist').append('<p style="cursor:pointer;' + (imagePath === 'void' ? '' : 'text-indent:6px !important;')
+    + 'color:' + color + ';' + ((API.getDJs()[0].username == username) ? 'font-size:15px;font-weight:bold;' : '')
+    + '" onclick="$(\'#chat-input-field\').val($(\'#chat-input-field\').val() + \'@' + username + ' \').focus();">'
+    + username + '</p>');
 }
 
 
@@ -255,8 +551,9 @@ function oldjoinQueue()
 /*
 * Clear the old code so we can properly update everything.
 */
+$('#plugbot-userlist').remove();
 $('#plugbot-css').remove();
-$('#plugbot-js').remove();
+$('#plugbotReloaded-js').remove();
 
 
 /*
