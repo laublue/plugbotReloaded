@@ -45,26 +45,12 @@ var autowoot;
 * Whether the user has currently enabled auto-queueing.
 */
 var autoqueue;
-/*
-* Whether or not the user has enabled hiding this video.
-*/
-var hideVideo;
-/*
-* Whether or not the user has enabled the userlist.
-*/
-var userList;
-/*
-* Whether the current video was skipped or not.
-*/
-var skippingVideo = false;
 
 /*
 * Cookie constants
 */
 var COOKIE_WOOT = 'autowoot';
 var COOKIE_QUEUE = 'autoqueue';
-var COOKIE_HIDE_VIDEO = 'hidevideo';
-var COOKIE_USERLIST = 'userlist';
 
 /*
 * Maximum amount of people that can be in the waitlist.
@@ -171,75 +157,19 @@ function displayUI()
 */
 function initUIListeners()
 {
-  /*
-* Toggle userlist.
-*/
-  $('#plugbot-btn-userlist').on("click", function() {
-    userList = !userList;
-    $(this).css('color', userList ? BUTTON_ON : BUTTON_OFF);
-   
-    $('#plugbot-userlist').css('visibility', userList ? 'visible' : 'hidden');
-
-    if (!userList) {
-      $('#plugbot-userlist').empty();
-    }
-    else {
-      populateUserlist();
-    }
-
-    jaaulde.utils.cookies.set(COOKIE_USERLIST, userList);
-  });
 
   /*
 * Toggle auto-woot.
 */
-  $('#plugbot-btn-woot').on('click', function() {
+  $('#autowoot').on('click', function() {
     autowoot = !autowoot;
     $(this).css('color', autowoot ? BUTTON_ON : BUTTON_OFF);
 
     if (autowoot) {
-      $('#button-vote-positive').click();
+      $('#woot').click();
     }
 
     jaaulde.utils.cookies.set(COOKIE_WOOT, autowoot);
-  });
-
-  /*
-* Toggle hide video.
-*/
-  $('#plugbot-btn-hidevideo').on('click', function() {
-    hideVideo = !hideVideo;
-    $(this).css('color', hideVideo ? BUTTON_ON : BUTTON_OFF);
-   
-    $(this).text(hideVideo ? 'hiding video' : 'hide video');
-    $('#yt-frame').animate({
-      'height': (hideVideo ? '0px' : '271px')
-    }, {
-      duration: 'fast'
-    });
-    $('#playback .frame-background').animate({
-      'opacity': (hideVideo ? '0' : '0.91')
-    }, {
-      duration: 'medium'
-    });
-
-    jaaulde.utils.cookies.set(COOKIE_HIDE_VIDEO, hideVideo);
-  });
-
-  /*
-* Skip the current video.
-*/
-  $('#plugbot-btn-skipvideo').on('click', function() {
-    skippingVideo = !skippingVideo;
-    $(this).css('color', skippingVideo ? BUTTON_ON : BUTTON_OFF);
-    $(this).text(skippingVideo ? 'skipping video' : 'skip video');
-       
-    if (hideVideo == skippingVideo) {
-      $('#button-sound').click();
-    } else {
-      $('#plugbot-btn-hidevideo').click();
-      $('#button-sound').click();
-    }
   });
 
   /*
@@ -264,34 +194,10 @@ function initUIListeners()
 function djAdvanced(obj)
 {
   /*
-* If they want the video to be hidden, be sure to re-hide it.
-*/
-  if (hideVideo) {
-    $('#yt-frame').css('height', '0px');
-    $('#playback .frame-background').css('opacity', '0.0');
-  }
-
-  /*
-* If they want to skip the next video, do it.
-*/
-  if (skippingVideo) {
-    $('#plugbot-btn-skipvideo').css('color', BUTTON_ON).text('skip video');
-    $('#button-sound').click();
-    skippingVideo = false;
-  }
-
-  /*
 * If auto-woot is enabled, WOOT! the song.
 */
   if (autowoot) {
-    $('#button-vote-positive').click();
-  }
-
-  /*
-* If the userlist is enabled, re-populate it.
-*/
-  if (userList) {
-    populateUserlist();
+    $('#woot').click();
   }
 }
 
