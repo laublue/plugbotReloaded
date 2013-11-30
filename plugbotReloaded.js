@@ -256,7 +256,7 @@ function oldjoinQueue()
 * Clear the old code so we can properly update everything.
 */
 $('#plugbot-css').remove();
-$('#plugbotReloaded-js').remove();
+$('#plugbot-js').remove();
 
 
 /*
