@@ -319,7 +319,7 @@ function djAdvanced(obj)
 * If auto-woot is enabled, WOOT! the song.
 */
   if (autowoot) {
-    $('#button-vote-positive').click();
+    $('#woot').click();
   }
 
   /*
@@ -668,7 +668,7 @@ function onCookiesLoaded()
 * Hit the woot button, if autowoot is enabled.
 */
   if (autowoot) {
-    $('#button-vote-positive').click();
+    $('#woot').click();
   }
 
   /*
