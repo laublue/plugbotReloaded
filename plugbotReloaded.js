@@ -362,10 +362,22 @@ function isInQueue()
 */
 function joinQueue()
 {
-  if ($('#button-dj-play').css('display') === 'block') {
-    $('#button-dj-play').click();
-  } else if (API.getWaitList().length < MAX_USERS_WAITLIST) {
-    API.djJoin();
+  if ($('#dj-button').hasClass('is-join')) 
+  {
+    $('#dj-button').click();
+  } 
+  else 
+  {
+    if ($('#dj-button').hasClass('is-wait'))
+    {
+      $('#dj-button').click();
+    } 
+    else 
+    {
+     if (API.getWaitList().length < MAX_USERS_WAITLIST) {
+       API.djJoin();
+     }
+    }
   }
 }
 
